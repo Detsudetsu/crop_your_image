@@ -55,6 +55,10 @@ class Crop extends StatelessWidget {
   /// Callback called when cropping area moved.
   final ValueChanged<Rect>? onMoved;
 
+  /// Callback called when cropping area moved.
+  /// Returned value is scaled to match the size of the current target image.
+  final ValueChanged<Rect>? onMovedPreviewPixel;
+
   /// Callback called when status of Crop widget is changed.
   ///
   /// note: Currently, the very first callback is [CropStatus.ready]
@@ -100,6 +104,7 @@ class Crop extends StatelessWidget {
     this.withCircleUi = false,
     this.controller,
     this.onMoved,
+    this.onMovedPreviewPixel,
     this.onStatusChanged,
     this.maskColor,
     this.baseColor = Colors.white,
@@ -131,6 +136,7 @@ class Crop extends StatelessWidget {
             withCircleUi: withCircleUi,
             controller: controller,
             onMoved: onMoved,
+            onMovedPreviewPixel: onMovedPreviewPixel,
             onStatusChanged: onStatusChanged,
             maskColor: maskColor,
             baseColor: baseColor,
@@ -156,6 +162,7 @@ class _CropEditor extends StatefulWidget {
   final bool withCircleUi;
   final CropController? controller;
   final ValueChanged<Rect>? onMoved;
+  final ValueChanged<Rect>? onMovedPreviewPixel;
   final ValueChanged<CropStatus>? onStatusChanged;
   final Color? maskColor;
   final Color baseColor;
@@ -176,6 +183,7 @@ class _CropEditor extends StatefulWidget {
     this.withCircleUi = false,
     this.controller,
     this.onMoved,
+    this.onMovedPreviewPixel,
     this.onStatusChanged,
     this.maskColor,
     required this.baseColor,
@@ -212,6 +220,15 @@ class _CropEditorState extends State<_CropEditor> {
       _rect = newRect;
     });
     widget.onMoved?.call(_rect);
+    final screenSizeRatio =
+        calculator.screenSizeRatio(_targetImage!, MediaQuery.of(context).size);
+    final _size = Rect.fromLTWH(
+      (_rect.left - _imageRect.left) * screenSizeRatio / _scale,
+      (_rect.top - _imageRect.top) * screenSizeRatio / _scale,
+      _rect.width * screenSizeRatio / _scale,
+      _rect.height * screenSizeRatio / _scale,
+    );
+    widget.onMovedPreviewPixel?.call(_size);
   }
 
   // for zooming
