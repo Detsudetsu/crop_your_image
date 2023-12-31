@@ -61,6 +61,8 @@ class _CropSampleState extends State<CropSample> {
   var _isCircleUi = false;
   Uint8List? _croppedData;
   var _statusText = '';
+  var _targetWidth = 0;
+  var _targetHeight = 0;
 
   @override
   void initState() {
@@ -136,6 +138,10 @@ class _CropSampleState extends State<CropSample> {
                                       'Crop is now cropping image',
                                 }[status] ??
                                 '';
+                          }),
+                          onMovedPreviewPixel: (value) => setState(() {
+                            _targetWidth = value.width.toInt();
+                            _targetHeight = value.height.toInt();
                           }),
                           initialSize: 0.5,
                           maskColor: _isSumbnail ? Colors.white : null,
@@ -236,6 +242,8 @@ class _CropSampleState extends State<CropSample> {
                               }),
                         ],
                       ),
+                      const SizedBox(height: 16),
+                      Text("$_targetWidth x $_targetHeight"),
                       const SizedBox(height: 16),
                       Container(
                         width: double.infinity,
