@@ -222,13 +222,13 @@ class _CropEditorState extends State<_CropEditor> {
     widget.onMoved?.call(_rect);
     final screenSizeRatio =
         calculator.screenSizeRatio(_targetImage!, MediaQuery.of(context).size);
-    final _size = Rect.fromLTWH(
+    final size = Rect.fromLTWH(
       (_rect.left - _imageRect.left) * screenSizeRatio / _scale,
       (_rect.top - _imageRect.top) * screenSizeRatio / _scale,
       _rect.width * screenSizeRatio / _scale,
       _rect.height * screenSizeRatio / _scale,
     );
-    widget.onMovedPreviewPixel?.call(_size);
+    widget.onMovedPreviewPixel?.call(size);
   }
 
   // for zooming
